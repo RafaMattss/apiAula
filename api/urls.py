@@ -1,6 +1,4 @@
-from django.contrib import admin
 from django.urls import path
-
 from api.views.discipline import DisciplineView, DisciplineDetailView
 from api.views.student import StudentView, StudentDetailView
 from api.views.task import TaskView, TaskDetailView

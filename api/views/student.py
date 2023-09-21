@@ -8,18 +8,20 @@ from api.serializers.student import StudentSerializer
 
 class StudentView(APIView):
 
+    #Função utilizada para pegar um objeto
     def get_object(self, pk):
         try:
             return StudentEntity.objects.get(pk=pk)
         except StudentEntity.DoesNotExist:
             raise Http404
         
-
+    #Função utilizada para pegar todos objetos e retorná-los em Json
     def get(self, request, format=None):
         student = StudentEntity.objects.all()
         serializer = StudentSerializer(student, many=True)
         return Response(serializer.data)
 
+    #Função utilizada para criar um objeto e retorná-lo em Json  
     def post(self, request, format=None):
         serializer = StudentSerializer(data=request.data)
         if (serializer.is_valid()):
@@ -30,17 +32,21 @@ class StudentView(APIView):
     
     
 class StudentDetailView(APIView):
+
+    #Função utilizada para pegar um objeto
     def get_object(self, pk):
         try:
             return StudentEntity.objects.get(pk=pk)
         except StudentEntity.DoesNotExist:
             raise Http404
     
+    #Função utilizada para pegar um objeto e retorná-lo em Json
     def get(self, request, pk, format=None):
         student = self.get_object(pk)
         serializer = StudentSerializer(student)
         return Response(serializer.data)
 
+    #Função utilizada para atualizar um objeto e retorná-lo em Json 
     def put(self, request, pk, format=None):
         student = self.get_object(pk)
         serializer = StudentSerializer(student,data=request.data)
@@ -49,6 +55,7 @@ class StudentDetailView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+    #Função utilizada para deletar um objeto
     def delete(self, request, pk, format=None):
         student = self.get_object(pk)
         student.delete()
