@@ -6,55 +6,57 @@ from rest_framework import status
 from api.models.discipline import DisciplineEntity
 from api.serializers.discipline import DisciplineSerializer
 
+# Classe que define as visualizações relacionadas às disciplinas.
 class DisciplineView(APIView):
 
-    #Função utilizada para pegar um objeto
+    # Função utilizada para obter um objeto de disciplina com base no seu ID.
     def get_object(self, pk):
         try:
             return DisciplineEntity.objects.get(pk=pk)
         except DisciplineEntity.DoesNotExist:
             raise Http404
         
-    #Função utilizada para pegar todos objetos e retorná-los em Json    
+    # Função utilizada para listar todas as disciplinas e retorná-las em formato JSON.
     def get(self, request, format=None):
         discipline = DisciplineEntity.objects.all()
         serializer = DisciplineSerializer(discipline, many=True)
         return Response(serializer.data)
 
-    #Função utilizada para criar um objeto e retorná-lo em Json   
+    # Função utilizada para criar uma nova disciplina e retorná-la em formato JSON.
     def post(self, request, format=None):
         serializer = DisciplineSerializer(data=request.data)
-        if (serializer.is_valid()):
+        if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
      
     
+# Classe que define as visualizações detalhadas relacionadas às disciplinas.
 class DisciplineDetailView(APIView):
     
-    #Função utilizada para pegar um objeto
+    # Função utilizada para obter um objeto de disciplina com base no seu ID.
     def get_object(self, pk):
         try:
             return DisciplineEntity.objects.get(pk=pk)
         except DisciplineEntity.DoesNotExist:
             raise Http404
     
-    #Função utilizada para pegar um objeto e retorná-lo em Json
+    # Função utilizada para obter detalhes de uma disciplina específica e retorná-los em formato JSON.
     def get(self, request, pk, format=None):
         discipline = self.get_object(pk)
         serializer = DisciplineSerializer(discipline)
         return Response(serializer.data)
     
-    #Função utilizada para atualizar um objeto e retorná-lo em Json
+    # Função utilizada para atualizar os detalhes de uma disciplina específica e retorná-los em formato JSON.
     def put(self, request, pk, format=None):
         discipline = self.get_object(pk)
-        serializer = DisciplineSerializer(discipline,data=request.data)
-        if (serializer.is_valid()):
+        serializer = DisciplineSerializer(discipline, data=request.data)
+        if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    #Função utilizada para deletar um objeto
+    # Função utilizada para deletar uma disciplina específica.
     def delete(self, request, pk, format=None):
         discipline = self.get_object(pk)
         discipline.delete()
